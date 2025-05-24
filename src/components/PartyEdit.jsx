@@ -13,14 +13,6 @@ const PartyEdit = () => {
 	});
 
 	useEffect(() => {
-		const fetchParty = async () => {
-			try {
-				const response = await PartyService.getById(id);
-				setParty(response.data);
-			} catch (error) {
-				console.error("Error fetching party:", error);
-			}
-		};
 		fetchParty();
 	}, [id]);
 
