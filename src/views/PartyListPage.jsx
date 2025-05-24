@@ -7,6 +7,7 @@ import ToastMessage from "../components/ToastMessage" // Import ToastMessage
 const PartyListPage = () => {
     const [parties, setParties] = useState([])
     const [message, setMessage] = useState({ text: "", type: "", visible: false }) // State for toast messages
+    const [searchTerm, setSearchTerm] = useState("") // State for search term
 
     useEffect(() => {
         fetchParties()
@@ -34,6 +35,12 @@ const PartyListPage = () => {
             })
     }
 
+    const handleSearchChange = (event) => {
+        setSearchTerm(event.target.value)
+    }
+
+    const filteredParties = parties.filter((party) => party.name.toLowerCase().includes(searchTerm.toLowerCase()))
+
     return (
         <div className="card">
             {message.visible && (
@@ -41,6 +48,22 @@ const PartyListPage = () => {
             )}
             <div className="flex justify-between items-center mb-6">
                 <h2 className="text-3xl font-semibold text-gray-700">Parties</h2>
+                <div className="form-input-with-icon w-1/3">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
+                        <path
+                            fillRule="evenodd"
+                            d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z"
+                            clipRule="evenodd"
+                        />
+                    </svg>
+                    <input
+                        type="text"
+                        placeholder="Search parties by name..."
+                        className="form-input w-full"
+                        value={searchTerm}
+                        onChange={handleSearchChange}
+                    />
+                </div>
                 {/* Optional: Add a button for creating a new party here if needed */}
                 <Link to="/parties/new" className="btn btn-primary">
                     Add Party
@@ -61,7 +84,7 @@ const PartyListPage = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {parties.map((party) => (
+                        {filteredParties.map((party) => (
                             <tr key={party.id}>
                                 {/* <td className="py-2 px-4 border-b">{party.id}</td> */}
                                 <td>{party.name}</td>

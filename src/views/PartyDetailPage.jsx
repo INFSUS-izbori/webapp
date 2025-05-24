@@ -10,6 +10,7 @@ const PartyDetailPage = () => {
     const [candidates, setCandidates] = useState([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
+    const [searchTerm, setSearchTerm] = useState("") // State for search term
 
     useEffect(() => {
         const fetchPartyDetails = () => {
@@ -43,6 +44,16 @@ const PartyDetailPage = () => {
 
         fetchPartyDetails()
     }, [id])
+
+    const handleSearchChange = (event) => {
+        setSearchTerm(event.target.value)
+    }
+
+    const filteredCandidates = candidates.filter(
+        (candidate) =>
+            candidate.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            (candidate.oib && candidate.oib.toLowerCase().includes(searchTerm.toLowerCase()))
+    )
 
     if (loading) {
         return (
@@ -96,10 +107,28 @@ const PartyDetailPage = () => {
             </div>
 
             <div className="card">
-                <h2 className="text-2xl font-semibold text-gray-700 mb-4">Candidates</h2>
-                {candidates.length > 0 ? (
+                <div className="flex justify-between items-center mb-4">
+                    <h2 className="text-2xl font-semibold text-gray-700">Candidates</h2>
+                    <div className="form-input-with-icon w-1/3">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
+                            <path
+                                fillRule="evenodd"
+                                d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z"
+                                clipRule="evenodd"
+                            />
+                        </svg>
+                        <input
+                            type="text"
+                            placeholder="Search candidates by name or OIB..."
+                            className="form-input w-full"
+                            value={searchTerm}
+                            onChange={handleSearchChange}
+                        />
+                    </div>
+                </div>
+                {filteredCandidates.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {candidates.map((candidate) => (
+                        {filteredCandidates.map((candidate) => (
                             <div key={candidate.id} className="bg-gray-50 p-4 rounded-lg shadow hover:shadow-lg transition-shadow">
                                 <Base64Image
                                     base64String={candidate.image}

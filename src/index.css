@@ -176,6 +176,25 @@ h6 {
     margin-bottom: 1rem;
 }
 
+/* Styling for search input with icon */
+.form-input-with-icon {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.form-input-with-icon svg {
+    position: absolute;
+    left: 0.75rem; /* Adjust as needed */
+    fill: #cbd5e0; /* Tailwind's border-gray-300 */
+    width: 1rem; /* Tailwind's w-4 */
+    height: 1rem; /* Tailwind's h-4 */
+}
+
+.form-input-with-icon .form-input {
+    padding-left: 2.5rem; /* Adjust to make space for the icon */
+}
+
 /* Alert styling */
 .alert {
     padding: 0.75rem 1.25rem;
