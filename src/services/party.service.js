@@ -9,6 +9,9 @@ const PartyService = {
     getById: (id) => {
         return axios.get(`${API_URL}/${id}`)
     },
+    create: (party) => {
+        return axios.post(API_URL, party)
+    },
     update: (id, party) => {
         return axios.put(`${API_URL}/${id}`, party)
     },

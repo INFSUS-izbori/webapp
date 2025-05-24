@@ -29,49 +29,54 @@ const PartyListPage = () => {
     }
 
     return (
-        <div className="container mx-auto mt-8">
-            <h2 className="text-2xl font-bold mb-4">Parties</h2>
+        <div className="card">
+            <div className="flex justify-between items-center mb-6">
+                <h2 className="text-3xl font-semibold text-gray-700">Parties</h2>
+                {/* Optional: Add a button for creating a new party here if needed */}
+                {/* <Link to="/parties/new" className="btn btn-primary">Add Party</Link> */}
+            </div>
             <div className="overflow-x-auto">
-                <table className="min-w-full bg-white border border-gray-200">
+                <table className="table-custom">
                     <thead>
-                        <tr className="bg-gray-100">
-                            <th className="py-2 px-4 border-b">ID</th>
-                            <th className="py-2 px-4 border-b">Name</th>
-                            <th className="py-2 px-4 border-b">Description</th>
-                            <th className="py-2 px-4 border-b">Date of Establishment</th>
-                            <th className="py-2 px-4 border-b">Logo</th>
-                            <th className="py-2 px-4 border-b">Created Date</th>
-                            <th className="py-2 px-4 border-b">Actions</th>
+                        <tr>
+                            {/* Removed ID column as it might not be user-facing friendly */}
+                            {/* <th className="py-2 px-4 border-b">ID</th> */}
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Date of Establishment</th>
+                            <th>Logo</th>
+                            <th>Created Date</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         {parties.map((party) => (
-                            <tr key={party.id} className="hover:bg-gray-50">
-                                <td className="py-2 px-4 border-b">{party.id}</td>
-                                <td className="py-2 px-4 border-b">{party.name}</td>
-                                <td className="py-2 px-4 border-b">{party.description}</td>
-                                <td className="py-2 px-4 border-b">{party.dateOfEstablishment}</td>
-                                <td className="py-2 px-4 border-b">
+                            <tr key={party.id}>
+                                {/* <td className="py-2 px-4 border-b">{party.id}</td> */}
+                                <td>{party.name}</td>
+                                <td>{party.description}</td>
+                                <td>{party.dateOfEstablishment}</td>
+                                <td>
                                     <Base64Image
                                         base64String={party.logo}
                                         altText={`${party.name} Logo`}
-                                        className="h-12 w-auto max-w-xs"
+                                        className="h-12 w-12 object-contain rounded"
                                     />
                                 </td>
-                                <td className="py-2 px-4 border-b">{party.createdDate}</td>
-                                <td className="py-2 px-4 border-b">
-                                    <Link
-                                        to={`/parties/detail/${party.id}`} // Changed Link to point to detail page
-                                        className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-2">
-                                        View Details
+                                <td>{party.createdDate}</td>
+                                <td className="space-x-2 whitespace-nowrap">
+                                    <Link to={`/parties/detail/${party.id}`} className="btn btn-success btn-sm py-1 px-3">
+                                        {" "}
+                                        {/* Adjusted button class and size */}
+                                        View
                                     </Link>
-                                    <Link
-                                        to={`/parties/${party.id}`} // This is the existing edit link
-                                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2">
+                                    <Link to={`/parties/${party.id}`} className="btn btn-primary btn-sm py-1 px-3">
+                                        {" "}
+                                        {/* Adjusted button class and size */}
                                         Edit
                                     </Link>
                                     <button
-                                        className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                                        className="btn btn-danger btn-sm py-1 px-3" /* Adjusted button class and size */
                                         onClick={() => handleDelete(party.id)}>
                                         Delete
                                     </button>

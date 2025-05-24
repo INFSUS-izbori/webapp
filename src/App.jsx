@@ -10,9 +10,9 @@ const App = () => {
     return (
         <Router>
             <Navbar />
-            <div className="container mx-auto px-4 py-8">
+            <div className="container-app">
                 {" "}
-                {/* Added some padding to the main container */}
+                {/* Use the new container class from index.css */}
                 <Routes>
                     <Route path="/" element={<Navigate to="/parties" />} />
                     <Route path="/candidates" element={<CandidatesListPage />} />

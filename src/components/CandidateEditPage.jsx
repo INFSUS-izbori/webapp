@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react"
 import CandidateService from "../services/candidate.service"
 import { useParams, useNavigate, Link } from "react-router-dom"
+import Base64Image from "../components/Base64Image" // Import the Base64Image component
 
 const CandidateEditPage = () => {
     const { id } = useParams()
@@ -41,80 +42,76 @@ const CandidateEditPage = () => {
     }
 
     return (
-        <div className="container mx-auto mt-8">
-            <h2 className="text-2xl font-bold mb-4">Edit Candidate</h2>
-            <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-                <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="oib">
+        <div className="card max-w-2xl mx-auto">
+            <h2 className="text-3xl font-semibold text-gray-700 mb-6">Edit Candidate</h2>
+            <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="form-group">
+                    <label className="form-label" htmlFor="oib">
                         OIB:
                     </label>
-                    <input
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        id="oib"
-                        type="text"
-                        name="oib"
-                        value={candidate.oib}
-                        onChange={handleChange}
-                    />
+                    <input className="form-input" id="oib" type="text" name="oib" value={candidate.oib} onChange={handleChange} required />
                 </div>
-                <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
+                <div className="form-group">
+                    <label className="form-label" htmlFor="name">
                         Name:
                     </label>
                     <input
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        className="form-input"
                         id="name"
                         type="text"
                         name="name"
                         value={candidate.name}
                         onChange={handleChange}
+                        required
                     />
                 </div>
-                <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="image">
-                        Image:
+                <div className="form-group">
+                    <label className="form-label" htmlFor="image">
+                        Image (Base64 String):
                     </label>
-                    <input
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        id="image"
-                        type="text"
-                        name="image"
-                        value={candidate.image}
-                        onChange={handleChange}
-                    />
+                    <textarea className="form-input h-32" id="image" name="image" value={candidate.image} onChange={handleChange} />
+                    {candidate.image && (
+                        <div className="mt-2">
+                            <p className="text-sm text-gray-500 mb-1">Image Preview:</p>
+                            <Base64Image
+                                base64String={candidate.image}
+                                altText="Candidate Preview"
+                                className="h-24 w-24 object-contain rounded border"
+                            />
+                        </div>
+                    )}
                 </div>
-                <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="description">
+                <div className="form-group">
+                    <label className="form-label" htmlFor="description">
                         Description:
                     </label>
                     <textarea
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        className="form-input h-24"
                         id="description"
                         name="description"
                         value={candidate.description}
                         onChange={handleChange}
                     />
                 </div>
-                <div className="mb-6">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="partyId">
+                <div className="form-group">
+                    <label className="form-label" htmlFor="partyId">
                         Party ID:
                     </label>
                     <input
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        className="form-input"
                         id="partyId"
-                        type="text"
+                        type="number"
                         name="partyId"
                         value={candidate.partyId}
                         onChange={handleChange}
+                        required
                     />
                 </div>
-                <div className="flex items-center justify-between">
-                    <button
-                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                        type="submit">
-                        Update
+                <div className="flex items-center justify-start space-x-4 pt-4">
+                    <button className="btn btn-primary" type="submit">
+                        Update Candidate
                     </button>
-                    <Link to="/candidates" className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800">
+                    <Link to="/candidates" className="btn btn-secondary">
                         Cancel
                     </Link>
                 </div>

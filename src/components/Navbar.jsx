@@ -1,20 +1,32 @@
 import React from "react"
-import { Link } from "react-router-dom"
+import { Link, NavLink } from "react-router-dom" // Import NavLink
 
 const Navbar = () => {
     return (
-        <nav className="bg-gray-800 p-4 text-white">
-            <div className="container mx-auto flex items-center justify-between">
-                <Link to="/" className="text-xl font-bold">
+        <nav className="bg-gradient-to-r from-blue-600 to-indigo-700 shadow-lg">
+            <div className="container mx-auto px-6 py-3 flex items-center justify-between">
+                <Link to="/" className="text-2xl font-bold text-white hover:text-blue-100 transition-colors">
                     IZBORI
                 </Link>
-                <div>
-                    <Link to="/candidates" className="px-3 hover:text-gray-300">
+                <div className="flex items-center space-x-4">
+                    <NavLink
+                        to="/candidates"
+                        className={({ isActive }) =>
+                            `px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                                isActive ? "bg-white text-blue-700 shadow-md" : "text-blue-100 hover:bg-blue-500 hover:text-white"
+                            }`
+                        }>
                         Candidates
-                    </Link>
-                    <Link to="/parties" className="px-3 hover:text-gray-300">
+                    </NavLink>
+                    <NavLink
+                        to="/parties"
+                        className={({ isActive }) =>
+                            `px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                                isActive ? "bg-white text-blue-700 shadow-md" : "text-blue-100 hover:bg-blue-500 hover:text-white"
+                            }`
+                        }>
                         Parties
-                    </Link>
+                    </NavLink>
                 </div>
             </div>
         </nav>

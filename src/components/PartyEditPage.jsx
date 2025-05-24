@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react"
 import PartyService from "../services/party.service"
 import { useParams, useNavigate, Link } from "react-router-dom"
+import Base64Image from "./Base64Image" // Import Base64Image for preview
 
 const PartyEditPage = () => {
     const { id } = useParams()
@@ -11,96 +12,129 @@ const PartyEditPage = () => {
         dateOfEstablishment: "",
         logo: "",
     })
+    const [loading, setLoading] = useState(true)
+    const [error, setError] = useState(null)
 
     useEffect(() => {
+        const fetchParty = async () => {
+            if (id === "new") {
+                // Handle new party creation
+                setParty({
+                    name: "",
+                    description: "",
+                    dateOfEstablishment: new Date().toISOString().split("T")[0], // Default to today
+                    logo: "",
+                })
+                setLoading(false)
+                return
+            }
+            try {
+                setLoading(true)
+                const response = await PartyService.getById(id)
+                // Ensure date is in YYYY-MM-DD format for the input type="date"
+                const fetchedParty = response.data
+                if (fetchedParty.dateOfEstablishment) {
+                    fetchedParty.dateOfEstablishment = new Date(fetchedParty.dateOfEstablishment).toISOString().split("T")[0]
+                }
+                setParty(fetchedParty)
+                setError(null)
+            } catch (err) {
+                console.error("Error fetching party:", err)
+                setError("Failed to load party data.")
+            } finally {
+                setLoading(false)
+            }
+        }
+
         fetchParty()
     }, [id])
 
-    const fetchParty = async () => {
-        try {
-            const response = await PartyService.getById(id)
-            setParty(response.data)
-        } catch (error) {
-            console.error("Error fetching party:", error)
-        }
-    }
-
     const handleChange = (e) => {
-        setParty({ ...party, [e.target.name]: e.target.value })
+        const { name, value } = e.target
+        setParty({ ...party, [name]: value })
     }
 
     const handleSubmit = async (e) => {
         e.preventDefault()
         try {
-            await PartyService.update(id, party)
+            if (id === "new") {
+                await PartyService.create(party) // Assuming you have a create method in PartyService
+            } else {
+                await PartyService.update(id, party)
+            }
             navigate("/parties")
         } catch (error) {
-            console.error("Error updating party:", error)
+            console.error("Error saving party:", error)
+            setError("Failed to save party. Please check the details and try again.")
         }
     }
 
+    if (loading) {
+        return (
+            <div className="flex justify-center items-center h-screen">
+                <p className="text-lg text-gray-500">Loading party editor...</p>
+            </div>
+        )
+    }
+
     return (
-        <div className="container mx-auto mt-8">
-            <h2 className="text-2xl font-bold mb-4">Edit Party</h2>
-            <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-                <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
+        <div className="card max-w-2xl mx-auto">
+            <h2 className="text-3xl font-semibold text-gray-700 mb-6">{id === "new" ? "Create New Party" : "Edit Party"}</h2>
+            {error && <div className="alert alert-danger mb-4">{error}</div>}
+            <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="form-group">
+                    <label className="form-label" htmlFor="name">
                         Name:
                     </label>
-                    <input
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        id="name"
-                        type="text"
-                        name="name"
-                        value={party.name}
-                        onChange={handleChange}
-                    />
+                    <input className="form-input" id="name" type="text" name="name" value={party.name} onChange={handleChange} required />
                 </div>
-                <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="description">
+                <div className="form-group">
+                    <label className="form-label" htmlFor="description">
                         Description:
                     </label>
                     <textarea
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        className="form-input h-24"
                         id="description"
                         name="description"
                         value={party.description}
                         onChange={handleChange}
                     />
                 </div>
-                <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="dateOfEstablishment">
+                <div className="form-group">
+                    <label className="form-label" htmlFor="dateOfEstablishment">
                         Date of Establishment:
                     </label>
                     <input
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        className="form-input"
                         id="dateOfEstablishment"
-                        type="text"
+                        type="date"
                         name="dateOfEstablishment"
                         value={party.dateOfEstablishment}
                         onChange={handleChange}
+                        required
                     />
                 </div>
-                <div className="mb-6">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="logo">
-                        Logo:
+                <div className="form-group">
+                    <label className="form-label" htmlFor="logo">
+                        Logo (Base64 String):
                     </label>
-                    <input
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        id="logo"
-                        type="text"
-                        name="logo"
-                        value={party.logo}
-                        onChange={handleChange}
-                    />
+                    <textarea className="form-input h-32" id="logo" name="logo" value={party.logo} onChange={handleChange} />
+                    {party.logo && (
+                        <div className="mt-2">
+                            <p className="text-sm text-gray-500 mb-1">Logo Preview:</p>
+                            <Base64Image
+                                base64String={party.logo}
+                                altText="Party Logo Preview"
+                                className="h-24 w-24 object-contain rounded border"
+                            />
+                        </div>
+                    )}
                 </div>
-                <div className="flex items-center justify-between">
-                    <button
-                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                        type="submit">
-                        Update
+                <div className="flex items-center justify-start space-x-4 pt-4">
+                    <button className="btn btn-primary" type="submit">
+                        {id === "new" ? "Create Party" : "Update Party"}
                     </button>
-                    <Link to="/parties" className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800">
+                    <Link to={id === "new" ? "/parties" : `/parties/detail/${id}`} className="btn btn-secondary">
                         Cancel
                     </Link>
                 </div>
