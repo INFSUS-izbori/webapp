@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react"
-import PartyService from "../services/party.service"
-import CandidateService from "../services/candidate.service" // Import CandidateService
+import PartyService from "../controllers/party.controller"
+import CandidateService from "../controllers/candidate.controller" // Import CandidateService
 import { useParams, Link } from "react-router-dom"
-import Base64Image from "./Base64Image"
+import Base64Image from "../components/Base64Image"
 
 const PartyDetailPage = () => {
     const { id } = useParams()
@@ -12,29 +12,33 @@ const PartyDetailPage = () => {
     const [error, setError] = useState(null)
 
     useEffect(() => {
-        const fetchPartyDetails = async () => {
-            try {
-                setLoading(true)
-                const partyResponse = await PartyService.getById(id)
-                setParty(partyResponse.data)
-
-                // Fetch all candidates and then filter by partyId client-side
-                // This is less efficient if you have many candidates,
-                // ideally the backend would support filtering candidates by partyId
-                const candidatesResponse = await CandidateService.getAll()
-                const partyCandidates = candidatesResponse.data.filter(
-                    (candidate) => candidate.partyId === parseInt(id) // Ensure partyId is compared correctly (e.g. as numbers)
-                )
-                setCandidates(partyCandidates)
-                setError(null)
-            } catch (err) {
-                console.error("Error fetching party details:", err)
-                setError("Failed to load party details. Please try again later.")
-                setParty(null)
-                setCandidates([])
-            } finally {
-                setLoading(false)
-            }
+        const fetchPartyDetails = () => {
+            setLoading(true)
+            PartyService.getById(id)
+                .then((partyData) => {
+                    if (partyData && partyData.logo && partyData.logo.startsWith("data:image")) {
+                        partyData.logo = partyData.logo.split(",")[1]
+                    }
+                    setParty(partyData)
+                    // Fetch all candidates and then filter by partyId client-side
+                    return CandidateService.getAll()
+                })
+                .then((candidatesData) => {
+                    const partyCandidates = Array.isArray(candidatesData)
+                        ? candidatesData.filter((candidate) => candidate.partyId === id) // Ensure partyId is compared correctly (e.g. as numbers)
+                        : []
+                    setCandidates(partyCandidates)
+                    setError(null)
+                })
+                .catch((err) => {
+                    console.error("Error fetching party details:", err)
+                    setError("Failed to load party details. Please try again later.")
+                    setParty(null)
+                    setCandidates([])
+                })
+                .finally(() => {
+                    setLoading(false)
+                })
         }
 
         fetchPartyDetails()
@@ -73,9 +77,17 @@ const PartyDetailPage = () => {
                         <h1 className="text-4xl font-bold text-gray-800 mb-2">{party.name}</h1>
                         <p className="text-gray-600 text-lg mb-1">{party.description}</p>
                         <p className="text-sm text-gray-500 mb-1">
-                            Established: {new Date(party.dateOfEstablishment).toLocaleDateString()}
+                            Established:{" "}
+                            {new Date(party.dateOfEstablishment).toLocaleDateString(undefined, {
+                                year: "numeric",
+                                month: "short",
+                                day: "numeric",
+                            })}
                         </p>
-                        <p className="text-sm text-gray-500">Record Created: {new Date(party.createdDate).toLocaleDateString()}</p>
+                        <p className="text-sm text-gray-500">
+                            Record Created:{" "}
+                            {new Date(party.createdDate).toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" })}
+                        </p>
                     </div>
                     <Link to={`/parties/${party.id}`} className="btn btn-primary mt-4 md:mt-0 self-start md:self-auto">
                         Edit Party
