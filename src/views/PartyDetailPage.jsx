@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 import PartyService from "../controllers/party.controller"
-import CandidateService from "../controllers/candidate.controller" // Import CandidateService
+import CandidateService from "../controllers/candidate.controller"
 import { useParams, Link } from "react-router-dom"
 import Base64Image from "../components/Base64Image"
 
@@ -10,7 +10,7 @@ const PartyDetailPage = () => {
     const [candidates, setCandidates] = useState([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
-    const [searchTerm, setSearchTerm] = useState("") // State for search term
+    const [searchTerm, setSearchTerm] = useState("")
 
     useEffect(() => {
         const fetchPartyDetails = () => {
@@ -21,12 +21,11 @@ const PartyDetailPage = () => {
                         partyData.logo = partyData.logo.split(",")[1]
                     }
                     setParty(partyData)
-                    // Fetch all candidates and then filter by partyId client-side
                     return CandidateService.getAll()
                 })
                 .then((candidatesData) => {
                     const partyCandidates = Array.isArray(candidatesData)
-                        ? candidatesData.filter((candidate) => candidate.partyId === id) // Ensure partyId is compared correctly (e.g. as numbers)
+                        ? candidatesData.filter((candidate) => candidate.partyId === id)
                         : []
                     setCandidates(partyCandidates)
                     setError(null)

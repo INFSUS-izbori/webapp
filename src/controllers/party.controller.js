@@ -1,5 +1,5 @@
 import axios from "axios"
-import Party from "../models/Party" // Import the Party model
+import Party from "../models/Party"
 
 const API_URL = "http://localhost:3000/api/parties"
 
@@ -35,7 +35,7 @@ const PartyService = {
     create: (party) => {
         return axios.post(API_URL, party).then((response) => {
             const partyData = response.data
-            return new Party( // Return a new Party instance
+            return new Party(
                 partyData.id,
                 partyData.name,
                 partyData.description,
@@ -48,7 +48,7 @@ const PartyService = {
     update: (id, party) => {
         return axios.put(`${API_URL}/${id}`, party).then((response) => {
             const partyData = response.data
-            return new Party( // Return a new Party instance
+            return new Party(
                 partyData.id,
                 partyData.name,
                 partyData.description,

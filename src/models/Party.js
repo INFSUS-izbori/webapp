@@ -4,11 +4,10 @@ class Party {
         this.name = name
         this.description = description
         this.dateOfEstablishment = dateOfEstablishment
-        this.logo = logo // Base64 string
+        this.logo = logo
         this.createdDate = createdDate
     }
 
-    // Example method:
     getDisplayInfo() {
         return `${this.name} (Established: ${this.dateOfEstablishment})`
     }

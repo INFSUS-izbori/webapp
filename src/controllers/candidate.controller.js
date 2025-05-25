@@ -1,5 +1,5 @@
 import axios from "axios"
-import Candidate from "../models/Candidate" // Import the Candidate model
+import Candidate from "../models/Candidate"
 
 const API_URL = "http://localhost:3000/api/candidates"
 
@@ -35,7 +35,6 @@ const CandidateService = {
         })
     },
     create: (candidate) => {
-        // Ensure partyId is null if it's an empty string or undefined
         const candidateToCreate = {
             ...candidate,
             partyId: candidate.partyId === "" || candidate.partyId === undefined ? null : candidate.partyId,
@@ -53,17 +52,12 @@ const CandidateService = {
         })
     },
     update: (id, candidate) => {
-        // Assuming candidate is an instance of Candidate or a plain object
-        // If it's a Candidate instance, you might want to convert it to a plain object
-        // if the API expects that. For now, we'll pass it as is.
         return axios.put(`${API_URL}/${id}`, candidate).then((response) => {
-            // Optionally, return the updated candidate data or a success message
             return response.data
         })
     },
     delete: (id) => {
         return axios.delete(`${API_URL}/${id}`).then((response) => {
-            // Optionally, return a success message or the response data
             return response.data
         })
     },

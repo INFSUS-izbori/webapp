@@ -1,11 +1,10 @@
-// filepath: e:\A_Desktop\all\faks\infsus\src\webapp\src\components\ToastMessage.jsx
 import React, { useEffect } from "react"
 
 const ToastMessage = ({ message, type, onClose }) => {
     useEffect(() => {
         const timer = setTimeout(() => {
             onClose()
-        }, 3000) // Auto close after 3 seconds
+        }, 3000)
 
         return () => clearTimeout(timer)
     }, [onClose])

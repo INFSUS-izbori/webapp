@@ -3,13 +3,12 @@ class Candidate {
         this.id = id
         this.oib = oib
         this.name = name
-        this.image = image // Base64 string
+        this.image = image
         this.description = description
         this.partyId = partyId
         this.createdDate = createdDate
     }
 
-    // Example method:
     getFullName() {
         return this.name
     }

@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react"
 import PartyService from "../controllers/party.controller"
 import { Link } from "react-router-dom"
-import Base64Image from "../components/Base64Image" // Added import
-import ToastMessage from "../components/ToastMessage" // Import ToastMessage
+import Base64Image from "../components/Base64Image"
+import ToastMessage from "../components/ToastMessage"
 
 const PartyListPage = () => {
     const [parties, setParties] = useState([])
-    const [message, setMessage] = useState({ text: "", type: "", visible: false }) // State for toast messages
-    const [searchTerm, setSearchTerm] = useState("") // State for search term
+    const [message, setMessage] = useState({ text: "", type: "", visible: false })
+    const [searchTerm, setSearchTerm] = useState("")
 
     useEffect(() => {
         fetchParties()
@@ -64,7 +64,6 @@ const PartyListPage = () => {
                         onChange={handleSearchChange}
                     />
                 </div>
-                {/* Optional: Add a button for creating a new party here if needed */}
                 <Link to="/parties/new" className="btn btn-primary">
                     Add Party
                 </Link>
@@ -73,8 +72,6 @@ const PartyListPage = () => {
                 <table className="table-custom">
                     <thead>
                         <tr>
-                            {/* Removed ID column as it might not be user-facing friendly */}
-                            {/* <th className="py-2 px-4 border-b">ID</th> */}
                             <th>Name</th>
                             <th>Description</th>
                             <th>Date of Establishment</th>
@@ -86,7 +83,6 @@ const PartyListPage = () => {
                     <tbody>
                         {filteredParties.map((party) => (
                             <tr key={party.id}>
-                                {/* <td className="py-2 px-4 border-b">{party.id}</td> */}
                                 <td>{party.name}</td>
                                 <td>{party.description}</td>
                                 <td>
@@ -113,16 +109,14 @@ const PartyListPage = () => {
                                 <td className="space-x-2 whitespace-nowrap">
                                     <Link to={`/parties/detail/${party.id}`} className="btn btn-success btn-sm py-1 px-3">
                                         {" "}
-                                        {/* Adjusted button class and size */}
                                         View
                                     </Link>
                                     <Link to={`/parties/${party.id}`} className="btn btn-primary btn-sm py-1 px-3">
                                         {" "}
-                                        {/* Adjusted button class and size */}
                                         Edit
                                     </Link>
                                     <button
-                                        className="btn btn-danger btn-sm py-1 px-3 cursor-pointer" /* Adjusted button class and size */
+                                        className="btn btn-danger btn-sm py-1 px-3 cursor-pointer"
                                         onClick={() => handleDelete(party.id)}>
                                         Delete
                                     </button>

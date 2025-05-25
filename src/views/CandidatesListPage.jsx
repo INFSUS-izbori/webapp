@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from "react"
 import CandidateService from "../controllers/candidate.controller"
-import PartyService from "../controllers/party.controller" // Import PartyService
+import PartyService from "../controllers/party.controller"
 import { Link } from "react-router-dom"
-import Base64Image from "../components/Base64Image" // Added import
-import ToastMessage from "../components/ToastMessage" // Import ToastMessage
+import Base64Image from "../components/Base64Image"
+import ToastMessage from "../components/ToastMessage"
 
 const CandidatesListPage = () => {
     const [candidates, setCandidates] = useState([])
-    const [parties, setParties] = useState([]) // State for parties
-    const [message, setMessage] = useState({ text: "", type: "", visible: false }) // State for toast messages
-    const [searchTerm, setSearchTerm] = useState("") // State for search term
+    const [parties, setParties] = useState([])
+    const [message, setMessage] = useState({ text: "", type: "", visible: false })
+    const [searchTerm, setSearchTerm] = useState("")
 
     useEffect(() => {
         fetchCandidates()
-        fetchParties() // Fetch parties
+        fetchParties()
     }, [])
 
     const fetchCandidates = () => {
@@ -41,7 +41,7 @@ const CandidatesListPage = () => {
             return "Nezavisan"
         }
         const party = parties.find((p) => p.id === partyId)
-        return party ? party.name : "Nezavisan" // Fallback for not found, though ideally all IDs should match
+        return party ? party.name : "Nezavisan"
     }
 
     const handleDelete = (id) => {
@@ -89,7 +89,6 @@ const CandidatesListPage = () => {
                         onChange={handleSearchChange}
                     />
                 </div>
-                {/* Optional: Add a button for creating a new candidate here if needed */}
                 <Link to="/candidates/new" className="btn btn-primary">
                     Add Candidate
                 </Link>
@@ -98,7 +97,6 @@ const CandidatesListPage = () => {
                 <table className="table-custom">
                     <thead>
                         <tr>
-                            {/* <th className="py-2 px-4 border-b">ID</th> */}
                             <th>OIB</th>
                             <th>Name</th>
                             <th>Image</th>
@@ -111,7 +109,6 @@ const CandidatesListPage = () => {
                     <tbody>
                         {filteredCandidates.map((candidate) => (
                             <tr key={candidate.id}>
-                                {/* <td className="py-2 px-4 border-b">{candidate.id}</td> */}
                                 <td>{candidate.oib}</td>
                                 <td>{candidate.name}</td>
                                 <td>
@@ -133,11 +130,10 @@ const CandidatesListPage = () => {
                                 <td className="space-x-2 whitespace-nowrap">
                                     <Link to={`/candidates/${candidate.id}`} className="btn btn-primary btn-sm py-1 px-3">
                                         {" "}
-                                        {/* Adjusted button class and size */}
                                         Edit
                                     </Link>
                                     <button
-                                        className="btn btn-danger btn-sm py-1 px-3 cursor-pointer" /* Adjusted button class and size */
+                                        className="btn btn-danger btn-sm py-1 px-3 cursor-pointer"
                                         onClick={() => handleDelete(candidate.id)}>
                                         Delete
                                     </button>
