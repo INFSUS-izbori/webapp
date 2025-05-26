@@ -13,6 +13,7 @@ const ImageInput = ({ onImageChange, currentImage, defaultImageType = "png" }) =
                 setImagePreview(fullDataUrl)
 
                 const base64String = fullDataUrl.split(",")[1]
+                onImageChange(base64String)
             }
             reader.readAsDataURL(file)
         }
